@@ -47,7 +47,7 @@ if [ ! -x "$(which cargo)" ]; then
     exit 1
 fi
 
-cargo build-sbf && solana-test-validator \
+solana-test-validator \
     --limit-ledger-size 0 \
     --bind-address 0.0.0.0 \
     --rpc-pubsub-enable-block-subscription \
