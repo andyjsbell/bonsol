@@ -105,8 +105,20 @@ echo "Requesting SOL airdrop for node operations..."
 solana -u http://localhost:8899 airdrop 1 --keypair node_keypair.json
 solana -u http://localhost:8899 airdrop 1
 
-# Set stack size limit
-ulimit -s unlimited
+# Set stack size limit (if supported and permitted)
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    # Try to set unlimited, but handle permission errors gracefully
+    if ! ulimit -s unlimited 2>/dev/null; then
+        echo "Note: Could not set unlimited stack size (permission denied)."
+        echo "Attempting to set maximum allowed value..."
+        # Try to set the maximum soft limit allowed
+        ulimit -s $(ulimit -Hs) 2>/dev/null || echo "Stack size limit unchanged. This should not affect normal operation."
+    fi
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+    # macOS has restrictions on modifying stack size
+    # Try to set a large but finite value instead
+    ulimit -s 65532 2>/dev/null || echo "Note: Could not modify stack size limit (this is normal on macOS)"
+fi
 
 # Construct RUST_LOG environment variable
 if [ -n "$LOG_TARGET" ]; then
