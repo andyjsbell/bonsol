@@ -16,6 +16,7 @@ Before you begin, ensure you have the following system requirements:
 
 * [Rust](https://solana.com/docs/intro/installation#install-rust)
 * [Solana CLI](https://solana.com/docs/intro/installation#install-the-solana-cli)
+* [Node.js](https://nodejs.org/en/download/)
 * [pnpm/pnpx](https://pnpm.io/installation)
 
 Verify you have these requirements by running:
@@ -24,6 +25,7 @@ Verify you have these requirements by running:
 cargo --version
 rustc --version
 solana --version
+node --version
 pnpm --version
 ```
 
@@ -67,9 +69,21 @@ cd bonsol
 {% endstep %}
 
 {% step %}
+#### Build the Solana Programs
+
+Build the Bonsol program and example programs that will be deployed to your local validator:
+
+```bash
+# Build the Solana programs
+./bin/build-programs.sh
+```
+
+This will generate the `.so` files in `target/deploy/` directory.
+{% endstep %}
+
+{% step %}
 #### Run the Solana validator script
 
-* Builds the Solana BPF programs using `cargo build-sbf`
 * Starts a local Solana validator with the Bonsol program at address `BoNsHRcyLLNdtnoDf8hiCNZpyehMC4FDMxs6NTxFi3ew`
 * Includes a callback example program
 * Allows adding additional BPF programs with their addresses
@@ -81,6 +95,19 @@ cd bonsol
 # Or run the local validator with the reset option
 ./bin/validator.sh -r
 ```
+{% endstep %}
+
+{% step %}
+#### Set up Solana keypair
+
+Create a new Solana keypair that will be used by the Bonsol node:
+
+```bash
+# Generate a new Solana keypair
+solana-keygen new -o ~/.config/solana/id.json
+```
+
+This keypair will be used for signing transactions and paying fees.
 {% endstep %}
 
 {% step %}
